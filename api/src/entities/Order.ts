@@ -8,6 +8,7 @@ import {
     PrimaryGeneratedColumn,
 } from "typeorm";
 import { Customer } from "./Customer";
+import { Payment } from "./Payment";
 
 @Entity({ name: "orders" })
 export class Order {
@@ -54,8 +55,8 @@ export class Order {
     // @OneToMany(() => OrderItem, (item) => item.order, { cascade: true })
     // items: OrderItem[];
 
-    // @OneToMany(() => Payment, (payment) => payment.order)
-    // payments: Payment[];
+    @OneToMany(() => Payment, (payment) => payment.order)
+    payments: Payment[];
 
     // @OneToMany(
     //     () => InventoryAdjustment,
