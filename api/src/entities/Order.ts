@@ -34,13 +34,13 @@ export class Order {
     order_datetime: Date;
 
     @Column({ type: "numeric", precision: 10, scale: 2, default: 0 })
-    subtotal_amount: string;
+    subtotal_amount: number;
 
     @Column({ type: "numeric", precision: 10, scale: 2, default: 0 })
-    tax_amount: string;
+    tax_amount: number;
 
     @Column({ type: "numeric", precision: 10, scale: 2, default: 0 })
-    total_amount: string;
+    total_amount: number;
 
     @Column({ type: "text", nullable: true })
     notes: string | null;
