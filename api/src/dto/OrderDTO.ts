@@ -1,4 +1,4 @@
-import { IsDate, IsInt, IsNumber, IsString, Length } from "class-validator";
+import { IsDate, IsInt, IsNumber, IsOptional, IsString, Length } from "class-validator";
 
 
 export class OrderDTO {
@@ -13,9 +13,6 @@ export class OrderDTO {
     @Length(1, 30, { message: "Status must be between 1 and 30 characters" })
     status: string;
 
-    @IsDate({ message: "Order date and time must be a valid date" })
-    order_datetime: Date;
-
     @IsNumber({}, { message: "Subtotal amount must be a number" })
     subtotal_amount: number;
 
@@ -26,5 +23,6 @@ export class OrderDTO {
     total_amount: number;
 
     @IsString({ message: "Notes must be a string" })
+    @IsOptional()
     notes: string;
 }

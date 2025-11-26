@@ -19,7 +19,7 @@ export class OrderService {
 
     // get order by customer id
     async getByCustomerId(customer_id: number): Promise<Order[]> {
-        return await this.OrderRepository.findBy({ customer_id });
+        return await this.OrderRepository.findBy({ customer: { id: customer_id } });
     }
 
     // create order

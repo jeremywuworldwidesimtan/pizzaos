@@ -1,9 +1,9 @@
 import { DataSource } from "typeorm";
 import { Customer } from "../entities/Customer";
-import * as dotenv from "dotenv";
 import { Order } from "../entities/Order";
+import * as dotenv from "dotenv";
 
-const env = dotenv.config({path: "../.env"});
+dotenv.config({path: "../.env"});
 
 // configure postgres connection with type orm
 export const AppDataSource = new DataSource({

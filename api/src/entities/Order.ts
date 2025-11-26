@@ -2,6 +2,7 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    JoinColumn,
     ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
@@ -17,9 +18,11 @@ export class Order {
         nullable: true,
         onDelete: "SET NULL",
     })
+    @JoinColumn({ name: "customer_id" })
     customer: Customer | null;
 
     @Column({ nullable: true })
+    @JoinColumn({ name: "customer_id" })
     customer_id: number | null; // keeps FK explicit
 
     // "dine-in", "takeout", "delivery", etc.
