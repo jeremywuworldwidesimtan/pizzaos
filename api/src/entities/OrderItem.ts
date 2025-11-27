@@ -13,9 +13,14 @@ import { MenuItem } from "./MenuItem";
 export class OrderItem {
     @PrimaryGeneratedColumn("increment")
     id: number;
+    
+    @ManyToOne(() => MenuItem, (menuItem) => menuItem.order_items)
+    @JoinColumn({ name: "menu_item_id" })
+    menu_item: MenuItem;
 
     @Index()
     @Column()
+    @JoinColumn({ name: "menu_item_id" })
     menu_item_id: number;
 
     @ManyToOne(() => Order, (order) => order.items, {
@@ -29,9 +34,6 @@ export class OrderItem {
     @JoinColumn({ name: "order_id" })
     order_id: number;
 
-    @ManyToOne(() => MenuItem, (menuItem) => menuItem.order_items)
-    @JoinColumn({ name: "menu_item_id" })
-    menu_item: MenuItem;
 
     @Column({ type: "int" })
     quantity: number;

@@ -11,7 +11,7 @@ import { InventoryAdjustment } from "./InventoryAdjustment";
 @Entity({ name: "inventory_items" })
 export class InventoryItem {
     @PrimaryGeneratedColumn("increment")
-    id!: number;
+    id: number;
 
     @Column({ length: 150 })
     name: string;

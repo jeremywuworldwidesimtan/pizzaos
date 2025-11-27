@@ -34,12 +34,14 @@ export class InventoryAdjustment {
 
     @Index()
     @Column({ nullable: true })
+    @JoinColumn({ name: "related_order_id" })
     related_order_id: number | null;
 
     @ManyToOne(() => Order, (order) => order.inventory_adjustments, {
         nullable: true,
         onDelete: "SET NULL",
     })
+    @JoinColumn({ name: "related_order_id" })
     related_order: Order | null;
 
     @CreateDateColumn({ type: "timestamptz" })
