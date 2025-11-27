@@ -9,6 +9,8 @@ import {
 } from "typeorm";
 import { Customer } from "./Customer";
 import { Payment } from "./Payment";
+import { OrderItem } from "./OrderItem";
+import { InventoryAdjustment } from "./InventoryAdjustment";
 
 @Entity({ name: "orders" })
 export class Order {
@@ -52,15 +54,15 @@ export class Order {
     @CreateDateColumn({ type: "timestamptz" })
     created_at: Date;
 
-    // @OneToMany(() => OrderItem, (item) => item.order, { cascade: true })
-    // items: OrderItem[];
+    @OneToMany(() => OrderItem, (item) => item.order, { cascade: true })
+    items: OrderItem[];
 
     @OneToMany(() => Payment, (payment) => payment.order)
     payments: Payment[];
 
-    // @OneToMany(
-    //     () => InventoryAdjustment,
-    //     (adjustment) => adjustment.related_order
-    // )
-    // inventory_adjustments: InventoryAdjustment[];
+    @OneToMany(
+        () => InventoryAdjustment,
+        (adjustment) => adjustment.related_order
+    )
+    inventory_adjustments: InventoryAdjustment[];
 }
