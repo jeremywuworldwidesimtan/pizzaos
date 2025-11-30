@@ -25,7 +25,7 @@ AppDataSource.initialize()
 
 // Routes
 app.use("/api/test", (req, res) => {
-    res.send("Welcome to Papa's PizzaOS API");
+    res.send("Welcome to PizzaOS API");
 });
 app.use("/api/v1/", routes);
 
