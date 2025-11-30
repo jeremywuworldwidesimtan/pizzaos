@@ -114,8 +114,8 @@ export const updatePaymentStatus = async (req: Request, res: Response) => {
 export const deletePayment = async (req: Request, res: Response) => {
     try {
         const id = parseInt(req.params.id);
-        const deleted = await PaymentServiceInstance.delete(id);
-        if (!deleted) {
+        const success = await PaymentServiceInstance.delete(id);
+        if (!success) {
             return res.status(404).json({ message: "Payment not found" });
         }
         res.status(200).json({ message: "Payment deleted successfully" });

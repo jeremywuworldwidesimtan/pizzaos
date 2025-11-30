@@ -3,6 +3,10 @@ import { Customer } from "../entities/Customer";
 import { Order } from "../entities/Order";
 import * as dotenv from "dotenv";
 import { Payment } from "../entities/Payment";
+import { InventoryAdjustment } from "../entities/InventoryAdjustment";
+import { InventoryItem } from "../entities/InventoryItem";
+import { MenuItem } from "../entities/MenuItem";
+import { OrderItem } from "../entities/OrderItem";
 
 dotenv.config({path: "../.env"});
 
@@ -16,7 +20,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: false,
   logging: false,
-  entities: [Customer, Order, Payment],
+  entities: [Customer, Order, Payment, OrderItem, InventoryAdjustment, InventoryItem, MenuItem],
   migrations: [],
   subscribers: [],
 });
