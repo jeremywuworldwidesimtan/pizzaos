@@ -126,10 +126,10 @@ All endpoints are prefixed with `/api/v1`.
 `validateDto` (in `src/middleware/ValidateDTO.ts`) transforms the body into a DTO class instance, runs `class-validator` rules, strips unknown fields, and returns 400 responses with per-field errors when validation fails. On success, the sanitized DTO instance replaces `req.body` before hitting controllers.
 
 ## Future Improvements / TODO
-- Secure the API with JWT-based authentication.
-- Add role-based access control for staff, managers, and admins.
-- Ship a React frontend that consumes these endpoints.
-- Add integration and unit tests for services, controllers, and DTO validation.
-- Introduce automated migrations and seed scripts for development data.
-- Add pagination, sorting, and filtering helpers for list endpoints.
-- Provide OpenAPI/Swagger documentation and CI workflows.
+- [X] Secure the API with JWT-based authentication.
+- [X] Add role-based access control for staff, managers, and admins.
+- [] Ship a React frontend that consumes these endpoints.
+- [] Add integration and unit tests for services, controllers, and DTO validation.
+- [] Introduce automated migrations and seed scripts for development data.
+- [] Add pagination, sorting, and filtering helpers for list endpoints.
+- [] Provide OpenAPI/Swagger documentation and CI workflows.
