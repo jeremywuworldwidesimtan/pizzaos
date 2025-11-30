@@ -2,7 +2,8 @@ import { Request, Response } from "express";
 import * as bcrypt from "bcrypt";
 import { AppDataSource } from "../config/database";
 import { User, UserRole } from "../entities/User";
-import { signToken } from "../middleware/JWT";
+import { signToken, verifyToken } from "../middleware/JWT";
+import { changePasswordDTO, UserDTO } from "../dto/UserDTO";
 
 const userRepo = () => AppDataSource.getRepository(User);
 
@@ -34,11 +35,7 @@ export const login = async (req: Request, res: Response) => {
 
 // POST /auth/create-user (admin only)
 export const createUser = async (req: Request, res: Response) => {
-    const { email, password, role } = req.body as {
-        email: string;
-        password: string;
-        role?: UserRole;
-    };
+    const { email, password, role } = req.body as UserDTO;
 
     if (!email || !password) {
         return res
@@ -70,4 +67,42 @@ export const createUser = async (req: Request, res: Response) => {
         console.error("createUser error", err);
         return res.status(500).json({ message: "Failed to create user" });
     }
+};
+
+// PUT /auth/change-password
+export const changePassword = async (req: Request, res: Response) => {
+    // Decode token explicitly here so we always use the authenticated user's id
+    const authHeader = req.headers["authorization"];
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return res
+            .status(401)
+            .json({ message: "Missing or invalid Authorization header" });
+    }
+
+    const token = authHeader.substring("Bearer ".length);
+    let payload;
+    try {
+        payload = verifyToken(token);
+    } catch (err) {
+        return res.status(401).json({ message: "Invalid or expired token" });
+    }
+
+    const userId = payload.userId;
+
+    const { old_password, new_password } = req.body as changePasswordDTO;
+    const user = await userRepo().findOne({ where: { id: userId } });
+    if (!user) {
+        return res.status(404).json({ message: "User not found" });
+    }
+
+    const passwordOk = await bcrypt.compare(old_password, user.password_hash);
+    if (!passwordOk) {
+        return res.status(401).json({ message: "Invalid old password" });
+    }
+
+    const newPasswordHash = await bcrypt.hash(new_password, 10);
+    user.password_hash = newPasswordHash;
+    await userRepo().save(user);
+
+    res.json({ message: "Password changed successfully" });
 };

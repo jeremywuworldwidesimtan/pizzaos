@@ -67,22 +67,31 @@ import { InventoryAdjustmentDTO } from "../dto/InventoryAdjustmentDTO";
 import { InventoryItemDTO } from "../dto/InventoryItemDTO";
 import { MenuItemDTO } from "../dto/MenuItemDTO";
 import { OrderItemDTO } from "../dto/OrderItemDTO";
-import { login, createUser } from "../controllers/AuthController";
+import {
+    login,
+    createUser,
+    changePassword,
+} from "../controllers/AuthController";
 import { authenticateJWT } from "../middleware/authenticateJWT";
 import { authorizeRoles } from "../middleware/roleAuth";
-import { UserDTO } from "../dto/UserDTO";
+import { changePasswordDTO, UserDTO } from "../dto/UserDTO";
 
 const router = Router();
 
 // Auth routes
 router.post("/auth/login", login);
-// Admin: create user (password will be hashed)
 router.post(
     "/auth/create-user",
     authenticateJWT,
     authorizeRoles("admin"),
     validateDto(UserDTO),
     createUser
+);
+router.put(
+    "/auth/change-password",
+    authenticateJWT,
+    validateDto(changePasswordDTO),
+    changePassword
 );
 
 // Customer routes

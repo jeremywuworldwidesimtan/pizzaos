@@ -14,3 +14,13 @@ export class UserDTO {
   @IsIn(['admin', 'manager', 'staff'] as UserRole[], { message: 'Role must be admin, manager, or staff' })
   role?: UserRole;
 }
+
+export class changePasswordDTO {
+  @IsString({ message: 'Old password must be a string' })
+  @Length(6, 200, { message: 'Old password must be at least 6 characters' })
+  old_password: string;
+
+  @IsString({ message: 'New password must be a string' })
+  @Length(6, 200, { message: 'New password must be at least 6 characters' })
+  new_password: string;
+}
