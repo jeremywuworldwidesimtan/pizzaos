@@ -36,6 +36,7 @@ PizzaOS is an Express.js API written in TypeScript that uses TypeORM to persist 
 - **Server bootstrap**: `src/server.ts` configures Express (morgan logging, JSON body parsing), initializes the TypeORM DataSource, registers routes, and starts the listener.
 
 ## Database Schema (entities)
+![](db_design.png)
 - **customers** (`Customer`)
   - `id` PK, `first_name`, `last_name`, optional `phone`, unique optional `email`, `created_at` timestamp.
   - Relations: one-to-many `orders`.
