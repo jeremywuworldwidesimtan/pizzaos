@@ -2,7 +2,7 @@ import { AppDataSource } from "../config/database";
 import { PaymentDTO } from "../dto/PaymentDTO";
 import { Payment } from "../entities/Payment";
 
-export type PaymentStatus = "pending" | "completed" | "failed" | "refunded";
+export type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
 
 export class PaymentService {
     private PaymentRepository = AppDataSource.getRepository(Payment);

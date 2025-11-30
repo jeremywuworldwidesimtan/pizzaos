@@ -1,80 +1,391 @@
 import { Router } from "express";
-import { getCustomers, getCustomerById, createCustomer, updateCustomer, deleteCustomer } from "../controllers/CustomerController";
+import {
+    getCustomers,
+    getCustomerById,
+    createCustomer,
+    updateCustomer,
+    deleteCustomer,
+} from "../controllers/CustomerController";
 import { validateDto } from "../middleware/ValidateDTO";
 import { CustomerDTO } from "../dto/CustomerDTO";
-import { getOrders, getOrderById, getOrdersByCustomerId, createOrder, updateOrder, updateOrderStatus, deleteOrder } from "../controllers/OrderController";
+import {
+    getOrders,
+    getOrderById,
+    getOrdersByCustomerId,
+    createOrder,
+    updateOrder,
+    updateOrderStatus,
+    deleteOrder,
+} from "../controllers/OrderController";
 import { OrderDTO } from "../dto/OrderDTO";
-import { getPayments, getPaymentById, createPayment, updatePayment, updatePaymentStatus, deletePayment, getPaymentsByOrderId, getPaymentsByStatus } from "../controllers/PaymentController";
+import {
+    getPayments,
+    getPaymentById,
+    createPayment,
+    updatePayment,
+    updatePaymentStatus,
+    deletePayment,
+    getPaymentsByOrderId,
+    getPaymentsByStatus,
+} from "../controllers/PaymentController";
 import { PaymentDTO } from "../dto/PaymentDTO";
-import { getInventoryAdjustments, getInventoryAdjustmentById, getInventoryAdjustmentsByInventoryItemId, getInventoryAdjustmentsByRelatedOrderId, createInventoryAdjustment, updateInventoryAdjustment, deleteInventoryAdjustment } from "../controllers/InventoryAdjustmentController";
-import { getInventoryItems, getInventoryItemById, getInventoryItemBySku, createInventoryItem, updateInventoryItem, deleteInventoryItem } from "../controllers/InventoryItemController";
-import { getMenuItems, getMenuItemById, getMenuItemsByCategory, createMenuItem, updateMenuItem, deleteMenuItem } from "../controllers/MenuItemController";
-import { getOrderItems, getOrderItemById, getOrderItemsByOrderId, getOrderItemsByMenuItemId, createOrderItem, updateOrderItem, deleteOrderItem } from "../controllers/OrderItemController";
+import {
+    getInventoryAdjustments,
+    getInventoryAdjustmentById,
+    getInventoryAdjustmentsByInventoryItemId,
+    getInventoryAdjustmentsByRelatedOrderId,
+    createInventoryAdjustment,
+    updateInventoryAdjustment,
+    deleteInventoryAdjustment,
+} from "../controllers/InventoryAdjustmentController";
+import {
+    getInventoryItems,
+    getInventoryItemById,
+    getInventoryItemBySku,
+    createInventoryItem,
+    updateInventoryItem,
+    deleteInventoryItem,
+} from "../controllers/InventoryItemController";
+import {
+    getMenuItems,
+    getMenuItemById,
+    getMenuItemsByCategory,
+    createMenuItem,
+    updateMenuItem,
+    deleteMenuItem,
+} from "../controllers/MenuItemController";
+import {
+    getOrderItems,
+    getOrderItemById,
+    getOrderItemsByOrderId,
+    getOrderItemsByMenuItemId,
+    createOrderItem,
+    updateOrderItem,
+    deleteOrderItem,
+} from "../controllers/OrderItemController";
 import { InventoryAdjustmentDTO } from "../dto/InventoryAdjustmentDTO";
 import { InventoryItemDTO } from "../dto/InventoryItemDTO";
 import { MenuItemDTO } from "../dto/MenuItemDTO";
 import { OrderItemDTO } from "../dto/OrderItemDTO";
+import { login, createUser } from "../controllers/AuthController";
+import { authenticateJWT } from "../middleware/authenticateJWT";
+import { authorizeRoles } from "../middleware/roleAuth";
+import { UserDTO } from "../dto/UserDTO";
 
 const router = Router();
 
+// Auth routes
+router.post("/auth/login", login);
+// Admin: create user (password will be hashed)
+router.post(
+    "/auth/create-user",
+    authenticateJWT,
+    authorizeRoles("admin"),
+    validateDto(UserDTO),
+    createUser
+);
+
 // Customer routes
-router.get("/customer", getCustomers);
-router.get("/customer/:id", getCustomerById);
-router.post("/customer", validateDto(CustomerDTO), createCustomer);
-router.put("/customer/:id", validateDto(CustomerDTO), updateCustomer);
-router.delete("/customer/:id", deleteCustomer);
+router.get(
+    "/customer",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    getCustomers
+);
+router.get(
+    "/customer/:id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    getCustomerById
+);
+router.post(
+    "/customer",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    validateDto(CustomerDTO),
+    createCustomer
+);
+router.put(
+    "/customer/:id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    validateDto(CustomerDTO),
+    updateCustomer
+);
+router.delete(
+    "/customer/:id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager"),
+    deleteCustomer
+);
 
 // Order routes
-router.get("/order", getOrders);
-router.get("/order/:id", getOrderById);
-router.get("/order/customer/:customer_id", getOrdersByCustomerId);
-router.post("/order", validateDto(OrderDTO), createOrder);
-router.put("/order/:id", validateDto(OrderDTO), updateOrder);
-router.put("/order/:id/status", validateDto(OrderDTO), updateOrderStatus);
-router.delete("/order/:id", deleteOrder);
+router.get(
+    "/order",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    getOrders
+);
+router.get(
+    "/order/:id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    getOrderById
+);
+router.get(
+    "/order/customer/:customer_id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    getOrdersByCustomerId
+);
+router.post(
+    "/order",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    validateDto(OrderDTO),
+    createOrder
+);
+router.put(
+    "/order/:id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    validateDto(OrderDTO),
+    updateOrder
+);
+router.put(
+    "/order/:id/status",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    validateDto(OrderDTO),
+    updateOrderStatus
+);
+router.delete(
+    "/order/:id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager"),
+    deleteOrder
+);
 
 // Payment routes
-router.get("/payment", getPayments);
-router.get("/payment/:id", getPaymentById);
-router.get("/payment/order/:order_id", getPaymentsByOrderId);
-router.get("/payment/status/:status", getPaymentsByStatus);
-router.post("/payment", validateDto(PaymentDTO), createPayment);
-router.put("/payment/:id", validateDto(PaymentDTO), updatePayment);
-router.patch("/payment/:id/status", validateDto(PaymentDTO), updatePaymentStatus);
-router.delete("/payment/:id", deletePayment);
-
+router.get(
+    "/payment",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    getPayments
+);
+router.get(
+    "/payment/:id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    getPaymentById
+);
+router.get(
+    "/payment/order/:order_id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    getPaymentsByOrderId
+);
+router.get(
+    "/payment/status/:status",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    getPaymentsByStatus
+);
+router.post(
+    "/payment",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    validateDto(PaymentDTO),
+    createPayment
+);
+router.put(
+    "/payment/:id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    validateDto(PaymentDTO),
+    updatePayment
+);
+router.patch(
+    "/payment/:id/status",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    validateDto(PaymentDTO),
+    updatePaymentStatus
+);
+router.delete(
+    "/payment/:id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager"),
+    deletePayment
+);
 // Menu item routes
-router.get("/menuitem", getMenuItems);
-router.get("/menuitem/:id", getMenuItemById);
-router.get("/menuitem/category/:category", getMenuItemsByCategory);
-router.post("/menuitem", validateDto(MenuItemDTO), createMenuItem);
-router.put("/menuitem/:id", validateDto(MenuItemDTO), updateMenuItem);
-router.delete("/menuitem/:id", deleteMenuItem);
+router.get(
+    "/menuitem",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    getMenuItems
+);
+router.get(
+    "/menuitem/:id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    getMenuItemById
+);
+router.get(
+    "/menuitem/category/:category",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    getMenuItemsByCategory
+);
+router.post(
+    "/menuitem",
+    authenticateJWT,
+    authorizeRoles("admin", "manager"),
+    validateDto(MenuItemDTO),
+    createMenuItem
+);
+router.put(
+    "/menuitem/:id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager"),
+    validateDto(MenuItemDTO),
+    updateMenuItem
+);
+router.delete(
+    "/menuitem/:id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager"),
+    deleteMenuItem
+);
 
 // Inventory item routes
-router.get("/inventoryitem", getInventoryItems);
-router.get("/inventoryitem/:id", getInventoryItemById);
-router.get("/inventoryitem/sku/:sku", getInventoryItemBySku);
-router.post("/inventoryitem", validateDto(InventoryItemDTO), createInventoryItem);
-router.put("/inventoryitem/:id", validateDto(InventoryItemDTO), updateInventoryItem);
-router.delete("/inventoryitem/:id", deleteInventoryItem);
-
+router.get(
+    "/inventoryitem",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    getInventoryItems
+);
+router.get(
+    "/inventoryitem/:id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    getInventoryItemById
+);
+router.get(
+    "/inventoryitem/sku/:sku",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    getInventoryItemBySku
+);
+router.post(
+    "/inventoryitem",
+    authenticateJWT,
+    authorizeRoles("admin", "manager"),
+    validateDto(InventoryItemDTO),
+    createInventoryItem
+);
+router.put(
+    "/inventoryitem/:id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager"),
+    validateDto(InventoryItemDTO),
+    updateInventoryItem
+);
+router.delete(
+    "/inventoryitem/:id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager"),
+    deleteInventoryItem
+);
 // Order item routes
-router.get("/orderitem", getOrderItems);
-router.get("/orderitem/:id", getOrderItemById);
-router.get("/orderitem/order/:order_id", getOrderItemsByOrderId);
-router.get("/orderitem/menuitem/:menu_item_id", getOrderItemsByMenuItemId);
-router.post("/orderitem", validateDto(OrderItemDTO), createOrderItem);
-router.put("/orderitem/:id", validateDto(OrderItemDTO), updateOrderItem);
-router.delete("/orderitem/:id", deleteOrderItem);
+router.get(
+    "/orderitem",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    getOrderItems
+);
+router.get(
+    "/orderitem/:id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    getOrderItemById
+);
+router.get(
+    "/orderitem/order/:order_id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    getOrderItemsByOrderId
+);
+router.get(
+    "/orderitem/menuitem/:menu_item_id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    getOrderItemsByMenuItemId
+);
+router.post(
+    "/orderitem",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    validateDto(OrderItemDTO),
+    createOrderItem
+);
+router.put(
+    "/orderitem/:id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    validateDto(OrderItemDTO),
+    updateOrderItem
+);
+router.delete(
+    "/orderitem/:id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager"),
+    deleteOrderItem
+);
 
 // Inventory adjustment routes
-router.get("/inventoryadjustment", getInventoryAdjustments);
-router.get("/inventoryadjustment/:id", getInventoryAdjustmentById);
-router.get("/inventoryadjustment/inventoryitem/:inventory_item_id", getInventoryAdjustmentsByInventoryItemId);
-router.get("/inventoryadjustment/relatedorder/:related_order_id", getInventoryAdjustmentsByRelatedOrderId);
-router.post("/inventoryadjustment", validateDto(InventoryAdjustmentDTO), createInventoryAdjustment);
-router.put("/inventoryadjustment/:id", validateDto(InventoryAdjustmentDTO), updateInventoryAdjustment);
-router.delete("/inventoryadjustment/:id", deleteInventoryAdjustment);
-
+router.get(
+    "/inventoryadjustment",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    getInventoryAdjustments
+);
+router.get(
+    "/inventoryadjustment/:id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    getInventoryAdjustmentById
+);
+router.get(
+    "/inventoryadjustment/inventoryitem/:inventory_item_id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    getInventoryAdjustmentsByInventoryItemId
+);
+router.get(
+    "/inventoryadjustment/relatedorder/:related_order_id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager", "staff"),
+    getInventoryAdjustmentsByRelatedOrderId
+);
+router.post(
+    "/inventoryadjustment",
+    authenticateJWT,
+    authorizeRoles("admin", "manager"),
+    validateDto(InventoryAdjustmentDTO),
+    createInventoryAdjustment
+);
+router.put(
+    "/inventoryadjustment/:id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager"),
+    validateDto(InventoryAdjustmentDTO),
+    updateInventoryAdjustment
+);
+router.delete(
+    "/inventoryadjustment/:id",
+    authenticateJWT,
+    authorizeRoles("admin", "manager"),
+    deleteInventoryAdjustment
+);
 export default router;

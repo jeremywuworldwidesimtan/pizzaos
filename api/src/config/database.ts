@@ -7,6 +7,7 @@ import { InventoryAdjustment } from "../entities/InventoryAdjustment";
 import { InventoryItem } from "../entities/InventoryItem";
 import { MenuItem } from "../entities/MenuItem";
 import { OrderItem } from "../entities/OrderItem";
+import { User } from "../entities/User";
 
 dotenv.config({path: "../.env"});
 
@@ -18,9 +19,9 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  synchronize: false,
+  synchronize: true,
   logging: false,
-  entities: [Customer, Order, Payment, OrderItem, InventoryAdjustment, InventoryItem, MenuItem],
+  entities: [User, Customer, Order, Payment, OrderItem, InventoryAdjustment, InventoryItem, MenuItem],
   migrations: [],
   subscribers: [],
 });

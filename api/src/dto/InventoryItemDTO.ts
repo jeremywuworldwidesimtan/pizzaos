@@ -8,9 +8,6 @@ import {
 } from "class-validator";
 
 export class InventoryItemDTO {
-    @IsInt({ message: "ID must be an integer" })
-    id: number;
-
     @IsString({ message: "Name must be a string" })
     @Length(1, 150, { message: "Name must be between 1 and 150 characters" })
     name: string;
