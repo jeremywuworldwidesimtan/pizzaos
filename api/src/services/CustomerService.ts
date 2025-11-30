@@ -8,7 +8,7 @@ export class CustomerService {
     private customerRepository = AppDataSource.getRepository(Customer);
 
     // Create customers
-    async create(custDTO: CustomerDTO): Promise<Customer> {
+    async create(custDTO: Partial<CustomerDTO>): Promise<Customer> {
         const newCustomer = this.customerRepository.create(custDTO);
         return await this.customerRepository.save(newCustomer);
     }
