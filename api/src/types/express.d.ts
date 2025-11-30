@@ -1,15 +1,12 @@
 // Extends Express Request interface to include authenticated user info
-import { UserRole } from '../entities/User';
+import { UserRole } from "../entities/User";
+import { Request } from "express";
 
-declare global {
-  namespace Express {
-    interface AuthUser {
-      userId: number;
-      role: UserRole;
-    }
-
+declare module "express-serve-static-core" {
     interface Request {
-      user?: AuthUser;
+        user?: {
+            userId: number;
+            role: UserRole;
+        };
     }
-  }
 }
