@@ -8,7 +8,7 @@ PizzaOS is an Express.js API written in TypeScript that uses TypeORM to persist 
 
 1. **Prerequisites**
     - Node.js (v18+ recommended)
-    - PostgreSQL instance and credentials
+    - PostgreSQL 18 instance and credentials
     - Yarn or npm
 2. **Environment variables** (create `.env` in `api/` or project root)
     - `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`
@@ -28,9 +28,10 @@ PizzaOS is an Express.js API written in TypeScript that uses TypeORM to persist 
     ```
     The API starts on `http://localhost:3000` and mounts routes under `/api/v1`. A simple health check is available at `/api/test`.
 6. **Create admin account in SQL**
-   Since a user account is required to access the JWT-secured endpoints and accounts can only be created by logged-in users with `admin` role, and since I haven't created a first-time setup interface yet, you would need to create a new account with SQL using
+
+   Since a user account is required to access the JWT-secured endpoints and accounts can only be created by logged-in users with `admin` role, and since I haven't created a first-time setup interface yet, you would need to create a new account with SQL (preferrably with pgAdmin 4) using
     ```sql
-    INSERT INTO public.users(email, password_hash, role) VALUES ("alan@whynettspendmatters.com", "$2b$10$1rSV/hv9I1mlVBaNpuXViOrLKksdL0lwLR6WdsHbl4jI3jUQSDcWu", "admin");
+    INSERT INTO users(email, password_hash, role) VALUES ("alan@whynettspendmatters.com", "$2b$10$1rSV/hv9I1mlVBaNpuXViOrLKksdL0lwLR6WdsHbl4jI3jUQSDcWu", "admin");
     ```
     and logging in with the following credentials:
     ```json
