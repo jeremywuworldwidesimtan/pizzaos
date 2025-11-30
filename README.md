@@ -128,8 +128,8 @@ All endpoints are prefixed with `/api/v1`.
 ## Future Improvements / TODO
 - [X] Secure the API with JWT-based authentication.
 - [X] Add role-based access control for staff, managers, and admins.
-- [] Ship a React frontend that consumes these endpoints.
-- [] Add integration and unit tests for services, controllers, and DTO validation.
-- [] Introduce automated migrations and seed scripts for development data.
-- [] Add pagination, sorting, and filtering helpers for list endpoints.
-- [] Provide OpenAPI/Swagger documentation and CI workflows.
+- [ ] Ship a React frontend that consumes these endpoints.
+- [ ] Add integration and unit tests for services, controllers, and DTO validation.
+- [ ] Introduce automated migrations and seed scripts for development data.
+- [ ] Add pagination, sorting, and filtering helpers for list endpoints.
+- [ ] Provide OpenAPI/Swagger documentation and CI workflows.
